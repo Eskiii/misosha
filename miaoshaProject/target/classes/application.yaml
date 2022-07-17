@@ -1,0 +1,92 @@
+spring:
+#  thymeleaf配置
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+
+#  数据源配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.10.140:3306/miaosha?&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
+    username: root
+    password: root
+
+#    连接池名字
+    type: com.alibaba.druid.pool.DruidDataSource
+
+#    druid配置
+    druid:
+      filter:
+        stat:
+          enabled: true
+      max-active: 1000
+      initial-size: 100
+      max-wait: 60000
+      min-idle: 500
+      time-between-eviction-runs-millis: 300000
+      validation-query: select 'x'
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      pool-prepared-statements: true
+      max-open-prepared-statements: 20
+
+  #redis配置
+  redis:
+    host: 192.168.10.138
+    port: 6379
+    # 单位为秒
+    timeout: 3000
+    password: 12345
+    jedis:
+      # 使用连接池
+      pool:
+        max-idle: 500
+        # 单位为秒
+        max-wait: 3000
+        max-active: 1000
+    pool-max-total: 1000
+    pool-max-idle: 500
+
+  #rabbitmq 配置
+  rabbitmq:
+    host: 192.168.10.138
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
+    listener: # 监听消息线程个数，个数越多并发量一般越大
+      simple:
+        concurrency: 10
+        max-concurrency: 10
+        prefetch: 1 # 每次从消息队列中预取的消息个数，但如果设置数量过多，会引起消息不及时处理从而造成饥饿
+        auto-startup: true
+        default-requeue-rejected: true  # 消费者消费消息失败，会将该消息重新入队
+    template:
+      retry:  # 消息队列满了的情况下，消息重新入队策略
+        enabled: true # 开启消息重新入队
+        initial-interval: 1000 # 在第一次消息入队失败一秒后重试入队
+        max-attempts: 3 # 最多重试三次
+        max-interval: 100000 # 尝试入队的最大间隔时间
+        multiplier: 1 # 下一次尝试的间隔时间间隔乘以 multiplier 等于下次尝试的时间间隔
+
+#  mvc:
+#    static-path-pattern: /static/**
+
+
+#mybatis配置
+mybatis:
+  type-aliases-package: com.imooc.miaosha.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    default-fetch-size: 100
+    default-statement-timeout: 3000
+  mapper-locations: classpath:/mapper/**/*.xml
+
+#logging:
+#  level:
+#    org.apache.tomcat: DEBUG
+#    org.apache.catalina: DEBUG
+
+server:
+  port: 9000

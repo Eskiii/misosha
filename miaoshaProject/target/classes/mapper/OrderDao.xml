@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imooc.miaosha.dao.OrderDao">
+<!--    namespace对应的是相应的dao文件-->
+    <select id="getMiaoshaOrderByUserIdGoodId" resultType="com.imooc.miaosha.entity.MiaoshaOrder">
+        select * from miaosha_order
+        where user_id = #{userId} and goods_id = #{goodsId};
+    </select>
+
+    <insert id="insertOrder" parameterType="com.imooc.miaosha.entity.OrderInfo">
+        insert into order_info (user_id, goods_id, goods_name, goods_count, goods_price, status, create_date)
+        values (#{userId}, #{goodsId}, #{goodsName}, #{goodsCount}, #{goodsPrice}, #{status}, #{createDate});
+        <selectKey keyColumn="id" keyProperty="id" order="AFTER" resultType="java.lang.Long">
+            select last_insert_id() as id;
+        </selectKey>
+    </insert>
+
+    <insert id="insertMiaoshaOrder" parameterType="com.imooc.miaosha.entity.MiaoshaOrder">
+        insert into miaosha_order (user_id, order_id, goods_id)
+        values (#{userId}, #{orderId}, #{goodsId});
+    </insert>
+
+    <select id="getById" resultType="com.imooc.miaosha.entity.OrderInfo">
+        select * from order_info
+        where id = #{orderId};
+    </select>
+</mapper>

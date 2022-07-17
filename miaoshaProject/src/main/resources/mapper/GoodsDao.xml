@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imooc.miaosha.dao.GoodsDao">
+<!--    namespace对应的是相应的dao文件-->
+    <select id="goodsVoList" resultType="com.imooc.miaosha.vo.GoodsVo">
+        select g.*, msg.miaosha_price, msg.stock_count, msg.start_date, msg.end_date
+        from goods g left join miaosha_goods msg on g.id = msg.goods_id;
+    </select>
+
+    <select id="getById" resultType="com.imooc.miaosha.vo.GoodsVo">
+        select g.*, msg.miaosha_price, msg.stock_count, msg.start_date, msg.end_date
+        from goods g left join miaosha_goods msg on g.id = msg.goods_id
+        where g.id = #{id}
+    </select>
+
+    <select id="getGoodsById" resultType="com.imooc.miaosha.entity.Goods">
+        select * from goods where id = #{id};
+    </select>
+
+    <update id="reduceMiaoshaStockById">
+        update miaosha_goods
+        set stock_count = stock_count - 1
+        where goods_id = #{goodsId} and stock_count > 0; -- 添加判断条件可以解决超卖，因为mysql会自动加上行级锁
+    </update>
+
+    <update id="reduceGoodsStockById">
+        update goods
+        set goods_stock = goods_stock - 1
+        where id = #{goodsId} and goods_stock > 0;  -- 添加判断条件可以解决超卖，因为mysql会自动加上行级锁
+    </update>
+</mapper>
