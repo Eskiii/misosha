@@ -15,7 +15,8 @@ public class MiaoshaUser {
     private Long id;    // mobile 作为 id
     private String nickname;
     private String password;
-    private String salt;
+    // private String salt;
+    private String saltString;
     private String head;
     private Date registerDate;
     private Date lastLoginDate;
